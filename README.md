@@ -1,5 +1,5 @@
 # Notifian
-An android app that automatically schedules android system reminders from your Obsidian notes. It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
+An React Native android app that automatically schedules android system reminders from your Obsidian notes. It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
 
 This project was forked from a private project I was working on. I had intended to commercialise that project, so I've copied the code from the fork to this new repo, to avoid including any of my pre-fork work in the commit history.
 
