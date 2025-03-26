@@ -1,7 +1,9 @@
 # Notifian
-A React Native android app that automatically schedules android system reminders from your Obsidian notes. It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
+A React Native android app that automatically schedules android system reminders from your Obsidian notes (available on the [Google Play Store](https://play.google.com/store/apps/details?id=com.notifian)). It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
 
-This project was forked from a private project I was working on. I had intended to commercialise that project, so I've copied the code from the fork to this new repo, to avoid including any of my pre-fork work in the commit history.
+This project was forked from a private project I was working on. I had intended to commercialise that project, so I've copied the code from the fork to this new repo, to avoid including any of my pre-fork work in the commit history. 
+
+Play Store builds from v1.20 onwards will be generated from the code on the `master` branch once enough stable improvements have been made to justify it. I can also create APKs and publish them as "releases" on Github, I don't plan on doing this at the moment but if enough users are interested I'll look into it.
 
 ## Why open source?
 I've decided to open source the app as I don't have a lot of time to add new features to it. I'm hoping that some members of the Obsidian community will be able to improve the code and add features at a faster rate than me. 
@@ -25,6 +27,3 @@ A high level overview of the code structure:
 If you're wondering where you should add some code, use the descriptions above as a guide. If you're still unsure feel free to open a "Discussion" to clarify!
 
 The most important file is `utilities/app/Walk.ts`, this contains the logic for scanning folders and identifying reminders. Most of the code for translating a note to a reminder is in this file.
-
-## Releases
-The project currently doesn't have any. But I might add apk releases in the future. I can deploy updates to the Play Store, so for the moment I'll just manually tag a bunch of commits for each Play Store update.
