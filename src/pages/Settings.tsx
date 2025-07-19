@@ -138,18 +138,27 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
         borderRadius: 6,
       },
       chooseFolderBtn: {width: undefined, height: 50},
+      helpBtn: {marginLeft: 10, marginBottom: 0, justifyContent: 'center', paddingLeft: 0, paddingRight: 0, width: 40, aspectRatio: 1},
   });
+
+  const taskBoardHelpText = `Enabling the integration with the "task board" plugin enables much faster scanning of reminder information in your notes.
+
+  However, since the scan method is different to Notifian's default scan method it also disables all other settings.
+  
+  For more information about "task board's" integration with Obsidian see: [TODO: ADD LINK HERE]`;
 
   // const [loading, _setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [_loadingMsg, _setLoadingMsg] = useState('loading');
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickFor, setPickFor] = useState('');
+  const [showTaskBoardHelpText, setShowTaskBoardHelpText] = useState(false);
 
   const [dueTime, setDueTime] = useState<Date | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [scheduledTime, setScheduledTime] = useState<Date | null>(null);
   const [enabledTasks, setEnabledTasks] = useState<boolean | null>(null);
+  const [enabledTaskBoardIntegration, setEnabledTaskBoardIntegration] = useState<boolean | null>(null);
   const [pickerValue, setPickerValue] = useState<Date>(NINE_AM);
   const [enabledRestrictedScan, setEnabledRestrictedScan] = useState<boolean | null>(null);
   const [restrictedScanPath, setRestrictedScanPath] = useState<string>('');
@@ -166,6 +175,11 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       if (s === null || s.scanTasks === undefined) {
         return;
       }
+
+      if (enabledTaskBoardIntegration === true) {
+        setEnabledTasks(false);
+      }
+
       if (enabledTasks === null) {
         if (s.scanTasks !== undefined) {
           setDueTime(s.scanTasks.dueTime);
@@ -179,6 +193,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
 
       const os: State = DeepCopy(store.get(state), 2);
       const ns: State = DeepCopy(store.get(state), 3);
+      ns.enabledTaskBoardPlugin = enabledTaskBoardIntegration !== null && enabledTaskBoardIntegration;
       ns.scanTasks = {
         enabled: enabledTasks,
         scheduledTime: scheduledTime === null ? NINE_AM : scheduledTime,
@@ -200,7 +215,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       }
     }
     updateStateFromToDB();
-  }, [dueTime, enabledRestrictedScan, enabledTasks, pickFor, restrictedScanPath, s, scheduledTime, startTime]);
+  }, [dueTime, enabledRestrictedScan, enabledTasks, pickFor, restrictedScanPath, s, scheduledTime, startTime, enabledTaskBoardIntegration]);
 
   // Currently won't update notifications when changing the due/scheduled/start times, this should force that
   useEffect(() => {
@@ -237,6 +252,31 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
           }}
           textAlign={'flex-start'}
         />
+        <View style={styles.switchRow}>
+          <Button
+            buttonText={''}
+            fgColor={'black'}
+            bgColor={'whitesmoke'}
+            fontSize={22}
+            icons={['question']}
+            iconColors={['black']}
+            iconPlacement={IconPlacement.Right}
+            customStyles={[styles.settingCard, styles.helpBtn]}
+            action={async () => {
+              setShowTaskBoardHelpText(true);
+              setShowModal(true);
+            }}
+          />
+          <Text style={subheadingTextStyle}>{'Enable "Task Board" Integration'}</Text>
+          <Switch
+            trackColor={{false: C_GRAY}}
+            onValueChange={(v) => {
+              setEnabledTaskBoardIntegration(v);
+              setResetDBCount(c => c + 1);
+            }}
+            value={enabledTaskBoardIntegration !== null && enabledTaskBoardIntegration}
+          />
+        </View>
         <View style={styles.switchRow}>
           <Text style={subheadingTextStyle}>{'Scan for "Tasks"'}</Text>
           <Switch
@@ -387,10 +427,10 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
         <View style={styles.modalBg}>
           <View style={styles.modal}>
             <Text style={styles.modalTitle}>
-              {'Modal'}
+              {showTaskBoardHelpText ? 'Task Board Integration' : 'Modal'}
             </Text>
             <Text style={[styles.modalContent]}>
-              {'Modal Content'}
+              {showTaskBoardHelpText ? taskBoardHelpText : 'Modal Content'}
             </Text>
             <Button
               buttonText={'Close'}
