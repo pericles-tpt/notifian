@@ -220,7 +220,10 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       }
 
       setRestrictedScanPathShown(decodeURIComponent(restrictedScanPath));
-      setTaskBoardFilePathShown(decodeURIComponent(taskBoardFilePath));
+      if (taskBoardFilePath.length > 0) {
+        const decodedPathParts = decodeURIComponent(taskBoardFilePath).split(':');
+        setTaskBoardFilePathShown(decodedPathParts[decodedPathParts.length - 1]);
+      }
 
       try {
         await setStateInDB(ns);
