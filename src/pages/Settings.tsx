@@ -186,6 +186,9 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
         return;
       }
 
+      if (enabledTaskBoardIntegration === null) {
+        setEnabledTaskBoardIntegration(s.taskBoardPluginPath !== undefined);
+      }
       if (enabledTaskBoardIntegration === true) {
         setEnabledTasks(false);
       }
