@@ -327,14 +327,13 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
                   const uri = dir[0].uri;
 
                   // If the 'picked' directory is invalid, return
-                  if (!uri.endsWith('/tasks.json')) {
+                  if (!uri.endsWith('%2Ftasks.json')) {
                     Alert.alert('Invalid file', "The file you selected isn't named 'tasks.json'");
                     return;
                   }
 
                   // Update URI in state
-                  const uriPathPart = uri.split('primary%3A')[1];
-                  setTaskBoardFilePath(uriPathPart);
+                  setTaskBoardFilePath(uri);
                   setResetDBCount(c => c + 1);
                 }}
                 textAlign={'flex-start'}
