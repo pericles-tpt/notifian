@@ -232,10 +232,13 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
   }, [dueTime, enabledRestrictedScan, enabledTasks, pickFor, restrictedScanPath, s, scheduledTime, startTime, enabledTaskBoardIntegration, taskBoardFilePath]);
 
   useEffect(() => {
-    if (!enabledTaskBoardIntegration && taskBoardFilePath.length > 0) {
-      releaseLongTermAccess([taskBoardFilePath]);
-      setTaskBoardFilePath('');
+    async function releaseTaskJSONAccess() {
+      if (!enabledTaskBoardIntegration && taskBoardFilePath.length > 0) {
+        await releaseLongTermAccess([taskBoardFilePath]);
+        setTaskBoardFilePath('');
+      }
     }
+    releaseTaskJSONAccess();
   }, [enabledTaskBoardIntegration, taskBoardFilePath]);
 
   // Currently won't update notifications when changing the due/scheduled/start times, this should force that
