@@ -325,7 +325,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
 
                   // If the 'picked' directory is invalid, return
                   if (!uri.endsWith('/tasks.json')) {
-                    Alert.alert('Invalid file', "The file you selected isn't named 'task.json");
+                    Alert.alert('Invalid file', "The file you selected isn't named 'tasks.json'");
                     return;
                   }
 
