@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {C_GRAY, C_LGRAY, MAX_SHOW_FOLDER_LEN, NINE_AM} from '../Constant';
+import {C_GRAY, C_LGRAY, C_RED, MAX_SHOW_FOLDER_LEN, NINE_AM} from '../Constant';
 import {Button, IconPlacement} from '../components/Button';
 import { subheadingTextStyle } from '../styles';
 import { useAtomValue } from 'jotai';
@@ -53,15 +53,22 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       elevation: 10,
     },
     modalTitle: {
+      flex: 1,
       fontSize: 30,
       textAlign: 'center',
       color: 'black',
       fontWeight: 'bold',
-      marginBottom: 10,
     },
     modalContent: {
+      flex: 10,
       fontSize: 18,
       color: 'black',
+    },
+    closeBtn: {
+      marginTop: 15,
+      flex: 1,
+      paddingHorizontal: 10,
+      alignSelf: 'center',
     },
     component: {
       paddingVertical: 15,
@@ -261,13 +268,13 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
             icons={['question']}
             iconColors={['black']}
             iconPlacement={IconPlacement.Right}
-            customStyles={[styles.settingCard, styles.helpBtn]}
+            customStyles={[styles.settingCard, styles.helpBtnTaskBoard]}
             action={async () => {
               setShowTaskBoardHelpText(true);
               setShowModal(true);
             }}
           />
-          <Text style={subheadingTextStyle}>{'Enable "Task Board" Integration'}</Text>
+          <Text style={[subheadingTextStyle, {alignSelf: 'center'}]}>{'Enable "Task Board" Integration'}</Text>
           <Switch
             trackColor={{false: C_GRAY}}
             onValueChange={(v) => {
@@ -434,22 +441,17 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
             </Text>
             <Button
               buttonText={'Close'}
-              fgColor={'black'}
-              bgColor={'white'}
+              fgColor={'white'}
+              bgColor={'black'}
               fontSize={25}
               icons={[]}
               iconColors={[]}
-              iconPlacement={IconPlacement.Right}
-              customStyles={[{
-                position: 'absolute',
-                alignSelf: 'center',
-                left: '39%',
-                top: 0,
-              }]}
+              iconPlacement={IconPlacement.Left}
+              customStyles={[styles.closeBtn]}
               action={() => {
                 setShowModal(false);
               }}
-              textAlign={'flex-start'}
+              textAlign={'center'}
             />
           </View>
         </View>

@@ -14,6 +14,7 @@ export const C_GRAY = 'dimgray';
 export const C_LGRAY = '#f1f1f1';
 export const C_BLUE = '#0000ff';
 export const PURPLE = '#9131cc';
+export const C_RED = 'darkred';
 
 // Conversion
 export const MIN_TO_MILLI = 60 * 1000;
