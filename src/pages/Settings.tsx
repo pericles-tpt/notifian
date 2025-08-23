@@ -18,7 +18,7 @@ import RNDateTimePicker, { DateTimePickerEvent } from '@react-native-community/d
 import { equal } from '../utilities/Time';
 import { resetDb } from '../db/db';
 import { getPathUpToLimit } from '../utilities/String';
-import { pickDirectory } from '@react-native-documents/picker';
+import { pick, types, pickDirectory, releaseLongTermAccess } from '@react-native-documents/picker';
 import { isUriSubdirectoryOfChosen } from '../utilities/Path';
 import { copyErrorFileToPickedDest } from '../utilities/Error';
 
@@ -146,6 +146,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       },
       chooseFolderBtn: {width: undefined, height: 50},
       helpBtn: {marginLeft: 10, marginBottom: 0, justifyContent: 'center', paddingLeft: 0, paddingRight: 0, width: 40, aspectRatio: 1},
+      helpBtnTaskBoard: {marginLeft: 0, marginRight: 10, marginBottom: 0, justifyContent: 'center', paddingLeft: 0, paddingRight: 0, width: 40, aspectRatio: 1},
   });
 
   const taskBoardHelpText = `Enabling the integration with the "task board" plugin enables much faster scanning of reminder information in your notes.
@@ -166,6 +167,8 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
   const [scheduledTime, setScheduledTime] = useState<Date | null>(null);
   const [enabledTasks, setEnabledTasks] = useState<boolean | null>(null);
   const [enabledTaskBoardIntegration, setEnabledTaskBoardIntegration] = useState<boolean | null>(null);
+  const [taskBoardFilePath, setTaskBoardFilePath] = useState<string>('');
+  const [taskBoardFilePathShown, setTaskBoardFilePathShown] = useState<string>('');
   const [pickerValue, setPickerValue] = useState<Date>(NINE_AM);
   const [enabledRestrictedScan, setEnabledRestrictedScan] = useState<boolean | null>(null);
   const [restrictedScanPath, setRestrictedScanPath] = useState<string>('');
@@ -200,7 +203,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
 
       const os: State = DeepCopy(store.get(state), 2);
       const ns: State = DeepCopy(store.get(state), 3);
-      ns.enabledTaskBoardPlugin = enabledTaskBoardIntegration !== null && enabledTaskBoardIntegration;
+      ns.taskBoardPluginPath = enabledTaskBoardIntegration ? taskBoardFilePath : undefined;
       ns.scanTasks = {
         enabled: enabledTasks,
         scheduledTime: scheduledTime === null ? NINE_AM : scheduledTime,
@@ -214,6 +217,7 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       }
 
       setRestrictedScanPathShown(decodeURIComponent(restrictedScanPath));
+      setTaskBoardFilePathShown(decodeURIComponent(taskBoardFilePath));
 
       try {
         await setStateInDB(ns);
@@ -222,7 +226,14 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
       }
     }
     updateStateFromToDB();
-  }, [dueTime, enabledRestrictedScan, enabledTasks, pickFor, restrictedScanPath, s, scheduledTime, startTime, enabledTaskBoardIntegration]);
+  }, [dueTime, enabledRestrictedScan, enabledTasks, pickFor, restrictedScanPath, s, scheduledTime, startTime, enabledTaskBoardIntegration, taskBoardFilePath]);
+
+  useEffect(() => {
+    if (!enabledTaskBoardIntegration && taskBoardFilePath.length > 0) {
+      releaseLongTermAccess([taskBoardFilePath]);
+      setTaskBoardFilePath('');
+    }
+  }, [enabledTaskBoardIntegration, taskBoardFilePath]);
 
   // Currently won't update notifications when changing the due/scheduled/start times, this should force that
   useEffect(() => {
@@ -284,6 +295,49 @@ export function Settings({setShowSettings}:{setShowSettings: Dispatch<SetStateAc
             value={enabledTaskBoardIntegration !== null && enabledTaskBoardIntegration}
           />
         </View>
+        {
+          enabledTaskBoardIntegration !== null && enabledTaskBoardIntegration &&
+            <>
+              <Text style={[subheadingTextStyle, styles.subsubheading, {color: taskBoardFilePath.length == 0 ? C_RED : 'black'}]}>
+                {`${taskBoardFilePathShown.length === 0 ? "choose a 'tasks.json' file" : (taskBoardFilePathShown.length <= MAX_SHOW_FOLDER_LEN ? taskBoardFilePathShown : '.../' +  getPathUpToLimit(taskBoardFilePathShown, MAX_SHOW_FOLDER_LEN - 3))}`}
+              </Text>
+              <Button
+                buttonText={(taskBoardFilePath.length === 0 ? 'choose' : 'change') + ' file'}
+                fgColor={'black'}
+                bgColor={'whitesmoke'}
+                fontSize={22}
+                icons={[]}
+                iconColors={[]}
+                iconPlacement={IconPlacement.Bottom}
+                customStyles={[styles.settingCard, styles.chooseFolderBtn]}
+                action={async () => {
+                  const dir = await pick({
+                    mode: 'open',
+                    requestLongTermAccess: true,
+                    allowMultiSelection: false,
+                    type: [types.json],
+                  });
+                  if (dir.length === 0) {
+                    Alert.alert('Error', 'Failed to get folder picked by user');
+                    return;
+                  }
+                  const uri = dir[0].uri;
+
+                  // If the 'picked' directory is invalid, return
+                  if (!uri.endsWith('/tasks.json')) {
+                    Alert.alert('Invalid file', "The file you selected isn't named 'task.json");
+                    return;
+                  }
+
+                  // Update URI in state
+                  const uriPathPart = uri.split('primary%3A')[1];
+                  setTaskBoardFilePath(uriPathPart);
+                  setResetDBCount(c => c + 1);
+                }}
+                textAlign={'flex-start'}
+              />
+            </>
+          }
         <View style={styles.switchRow}>
           <Text style={subheadingTextStyle}>{'Scan for "Tasks"'}</Text>
           <Switch

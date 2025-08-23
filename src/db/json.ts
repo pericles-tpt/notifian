@@ -11,7 +11,7 @@ export type State = {
   vaults: string[];
   lastScanTime: Date | null;
   lastScanMS: number;
-  enabledTaskBoardPlugin?: boolean;
+  taskBoardPluginPath?: string;
 
   scanTasks?: {
     enabled: boolean,
@@ -60,7 +60,6 @@ export function getStateFromJSONOrCache(): Promise<State | null> {
             intervalMinutes: 15,
             lastScanTime: null,
             lastScanMS: -1,
-            enabledTaskBoardPlugin: false,
             scanTasks: {
               enabled: false,
               scheduledTime: NINE_AM,
