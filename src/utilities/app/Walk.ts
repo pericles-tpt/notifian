@@ -9,10 +9,11 @@ import {after, before} from '../Time';
 import {CONTENT_PREVIEW_LIMIT, DAY_OF_WEEK, HOUR_TO_SEC, MAX_FRONTMATTER_SIZE_TO_CHECK} from '../../Constant';
 import {FileStat, FileSystem} from 'react-native-file-access';
 import {getStateFromFile, setStateInDB} from '../../db/json';
-import {stringMd5} from 'react-native-quick-md5';
+import { md5 } from '@noble/hashes/legacy.js';
 import {resetNotifications} from './Notification';
 import { state, store } from '../../atoms';
 import { flushErrorToFile } from '../Error';
+import { utf8ToBytes } from '@noble/hashes/utils.js';
 
 // Obsidian "Tasks" Support
 // Do this match first on each file
@@ -352,8 +353,8 @@ export async function rescanDirs(dirs: string[]) {
   // deleted: in OLD && !in NEW
   // skip: in OLD && in NEW
   // added: !in OLD && in NEW
-  const oldHashes = oldNotifications.map(n => stringMd5(JSON.stringify(n)));
-  const newHashes = newNotifications.map(n => stringMd5(JSON.stringify(n)));
+  const oldHashes = oldNotifications.map(n => Array.from(md5(utf8ToBytes(JSON.stringify(n)))).map(b => b.toString(16).padStart(2, '0')).join(''));
+  const newHashes = newNotifications.map(n => Array.from(md5(utf8ToBytes(JSON.stringify(n)))).map(b => b.toString(16).padStart(2, '0')).join(''));
 
   const deleteNotifications: FileEntryT[] = [];
   const addNotifications: FileEntryT[] = [];
