@@ -313,6 +313,20 @@ Example: If you only set reminders for events at least 1 hour in the future, set
     <>
       <View style={styles.component}>
         <View>
+        <Button
+              buttonText={'IMPORTANT NOTICE FOR USA USERS'}
+              fgColor={'white'}
+              bgColor={'red'}
+              fontSize={22}
+              icons={[]}
+              iconColors={[]}
+              iconPlacement={IconPlacement.Bottom}
+              customStyles={[{padding: 5}]}
+              action={async () => {
+                Alert.alert('NOTICE', "Notifian will become UNAVAILABLE in the Google Play store from the 15th of December 2025 for users located in the USA\n\nFor more information see the README at the 'Source Code' link below");
+              }}
+              textAlign={'center'}
+            />
           <Text style={[subheadingTextStyle, styles.subheading]}>
             {'Scan Folder'}
           </Text>
