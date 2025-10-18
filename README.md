@@ -1,3 +1,12 @@
+# IMPORTANT NOTICE
+From the 15th of December 2025 Notifian will NOT BE AVAILABLE TO USERS IN THE USA. 
+
+As much as I would like the ~25% of my users located in the USA to be able to continue using the app, a new law being introduced in several US states has forced this decision. 
+
+The law requires all Android apps to verify the age of their users to determine whether they should be able to access an app or not. I belive this kind of data collection is unwarranted for Notifian and an unecessary violation of my users' privacy. Rather than compromising my values on privacy and data collection I've decided to make my app unavailable to users in the USA through the play store. The first law that requires this comes into effect in 2026, but I've decided to make this change before then to ensure compliance. For more information about this see: https://support.google.com/googleplay/android-developer/answer/16569691?hl=en
+
+I apologise to all the users of Notifian located in the USA, I wish I didn't have to make this decision. If these laws are reversed in the future I'll definitely make Notifian available in the USA again. For further enquiries, please contact me at: notifian.team@gmail.com
+
 # Notifian
 A React Native android app that automatically schedules android system reminders from your Obsidian notes (available on the [Google Play Store](https://play.google.com/store/apps/details?id=com.notifian)). It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
 
