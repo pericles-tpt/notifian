@@ -7,6 +7,10 @@ The law requires all Android apps to verify the age of their users to determine 
 
 I apologise to all the users of Notifian located in the USA, I wish I didn't have to make this decision. If these laws are reversed in the future I'll definitely make Notifian available in the USA again. For further enquiries, please contact me at: notifian.team@gmail.com
 
+## UPDATE 10/03/2026
+
+From the 17/03/2026, the Brazilian government will also be mandating that apps ingest age range data from app stores. For the reasons listed in the section above Notifian will no longer be available to users in Brazil from the 10/3/2026. I apologise to all users in Brazil that would like to use the app, if this law is removed in the future I'll gladly make Notifian available in Brazil again.
+
 # Notifian
 A React Native android app that automatically schedules android system reminders from your Obsidian notes (available on the [Google Play Store](https://play.google.com/store/apps/details?id=com.notifian)). It does this by scanning a folder containing one or more vaults, identifying reminder information and setting system notifications from that.
 
