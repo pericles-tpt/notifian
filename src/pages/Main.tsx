@@ -352,14 +352,8 @@ Example: If you only set reminders for events at least 1 hour in the future, set
                 if (dir === null) {
                   Alert.alert('Error', 'Failed to get folder picked by user');
                   return;
-                } else {
-                  const location = dir.uri.split('tree/')[1];
-                  if (!location.startsWith('primary%3ADocuments')) {
-                    Alert.alert('Invalid location', 'Please choose a folder inside the INTERNAL Documents folder');
-                    return;
-                  }
-                }
-
+                } 
+                
                 // If the 'picked' directory is different to the old one, release it
                 let oldUri = '';
                 if (os !== null) {
